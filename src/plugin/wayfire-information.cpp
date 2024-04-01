@@ -74,6 +74,7 @@ void wayfire_information::send_view_info(wayfire_view view)
             role = "UNKNOWN";
             break;
     }
+    auto layout = output->get_layout_geometry();
 
     auto og = output->get_screen_size();
     auto ws = output->workspace->get_current_workspace();
@@ -118,7 +119,9 @@ void wayfire_information::send_view_info(wayfire_view view)
                                        vg.width,
                                        vg.height,
                                        is_xwayland_surface,
-                                       focused);
+                                       focused,
+                                       vg.x + layout.x,
+                                       vg.y + layout.y);
     }
 }
 
