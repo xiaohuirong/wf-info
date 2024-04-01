@@ -68,6 +68,14 @@
       <arg name="focused" type="int" summary="whether view is focused"/>
       <arg name="abs_x" type="int" summary="view absolute x position"/>
       <arg name="abs_y" type="int" summary="view absolute y position"/>
+      <arg name="output_name" type="string" summary="output name"/>
+    </event>
+
+    <event name="output_info">
+      <description summary="Export information about a output to a client">
+	Provide client with information about a view.
+      </description>
+      <arg name="output_name" type="string" summary="output name"/>
     </event>
 
     <event name="done">

@@ -48,10 +48,6 @@ static void bind_manager(wl_client *client, void *data,
 
 void wayfire_information::send_view_info(wayfire_view view)
 {
-    if (!view)
-    {
-        return;
-    }
     auto output = view->get_output();
     if (!output)
     {
@@ -75,6 +71,7 @@ void wayfire_information::send_view_info(wayfire_view view)
             break;
     }
     auto layout = output->get_layout_geometry();
+    char *output_name = output->handle->name;
 
     auto og = output->get_screen_size();
     auto ws = output->workspace->get_current_workspace();
@@ -121,7 +118,18 @@ void wayfire_information::send_view_info(wayfire_view view)
                                        is_xwayland_surface,
                                        focused,
                                        vg.x + layout.x,
-                                       vg.y + layout.y);
+                                       vg.y + layout.y,
+                                       output_name);
+    }
+}
+
+void wayfire_information::send_output_info(wf::output_t *output)
+{
+    char *output_name = output->handle->name;
+
+    for (auto r : client_resources)
+    {
+        wf_info_base_send_output_info(r, output_name);
     }
 }
 
@@ -137,7 +145,17 @@ void wayfire_information::deactivate()
     idle_set_cursor.run_once([this] ()
     {
         wf::get_core().set_cursor("default");
-        send_view_info(wf::get_core().get_cursor_focus_view());
+        auto view = wf::get_core().get_cursor_focus_view();
+        auto output = wf::get_core().get_active_output();
+
+        if (view)
+        {
+            send_view_info(view);
+        }
+        else if(output){
+            send_output_info(output);
+        }
+
         for (auto r : client_resources)
         {
             wf_info_base_send_done(r);

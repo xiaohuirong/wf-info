@@ -71,7 +71,8 @@ static void receive_view_info(void *data,
     const int xwayland,
     const int focused,
     const int abs_x,
-    const int abs_y)
+    const int abs_y,
+    const char *output_name)
 {
     std::cout << "=========================" << std::endl;
     std::cout << "View ID: " << view_id << std::endl;
@@ -84,8 +85,20 @@ static void receive_view_info(void *data,
     std::cout << "Absolute Geometry: " << abs_x << "," << abs_y << " " << width << "x" << height << std::endl;
     std::cout << "Xwayland: " << (xwayland ? "true" : "false") << std::endl;
     std::cout << "Focused: " << (focused ? "true" : "false") << std::endl;
+    std::cout << "Output Name: " << output_name << std::endl;
     std::cout << "=========================" << std::endl;
 }
+
+
+static void receive_output_info(void *data,
+    struct wf_info_base *wf_info_base,
+    const char *output_name)
+{
+    std::cout << "=========================" << std::endl;
+    std::cout << "Output Name: " << output_name << std::endl;
+    std::cout << "=========================" << std::endl;
+}
+
 
 static void done(void *data,
     struct wf_info_base *wf_info_base)
@@ -95,6 +108,7 @@ static void done(void *data,
 
 static struct wf_info_base_listener information_base_listener {
 	.view_info = receive_view_info,
+    .output_info = receive_output_info,
 	.done = done,
 };
 
